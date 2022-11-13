@@ -1,0 +1,45 @@
+# Compiled class file
+*.class
+
+# Log file
+*.log
+
+# BlueJ files
+*.ctxt
+
+# Mobile Tools for Java (J2ME)
+.mtj.tmp/
+.gradle/
+*build/
+build/
+.idea/
+
+# Package Files #
+*.jar
+*.war
+*.nar
+*.ear
+*.zip
+*.tar.gz
+*.rar
+
+# virtual machine crash logs, see http://www.java.com/en/download/help/error_hotspot.xml
+hs_err_pid*
+Atlas-Paper/target/
+Atlas-Velocity/target/
+Atlas-Common/target/
+Atlas-Minestom/target/
+Atlas-Velocity/Atlas-Velocity.iml
+Atlas-Velocity/.flattened-pom.xml
+.idea/
+.idea/workspace.xml
+.idea/misc.xml
+.idea/compiler.xml
+.flattened-pom.xml
+
+*.lst
+*.iml
+.idea/workspace.xml
+.idea/misc.xml
+.idea/workspace.xml
+.idea/workspace.xml

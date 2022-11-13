@@ -1,0 +1,5 @@
+name: Atlas
+main: com.dndcraft.atlas.AtlasPaper
+depend: [ProtocolLib]
+version: 0.6.0
+api-version: 1.18
