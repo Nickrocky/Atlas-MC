@@ -10,6 +10,8 @@ import com.google.common.base.Suppliers;
 import lombok.NonNull;
 import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.format.NamedTextColor;
+import net.kyori.adventure.text.serializer.gson.GsonComponentSerializer;
+import net.kyori.adventure.text.serializer.plain.PlainTextComponentSerializer;
 import org.apache.commons.lang.Validate;
 import org.bukkit.Material;
 import org.bukkit.event.inventory.InventoryType;
@@ -23,27 +25,45 @@ import java.util.function.Consumer;
 import static org.bukkit.Material.AIR;
 
 public class MenuBuilder {
-	final String title;
+	final Component title;
 	final InventoryType type;
 	final int size;
 	
 	final List<Icon> icons;
-	
-	public MenuBuilder(String title, int rows) {
-		this.title = title;
+
+
+	public MenuBuilder(Component titleComponent, int rows){
+		this.title = titleComponent;
 		type = InventoryType.CHEST;
 		size = rows*9;
-		
 		icons = Arrays.asList(new Icon[size]);
 	}
-	
-	public MenuBuilder(String title, InventoryType type) {
+
+	@Deprecated
+	/**
+	 * This constructor is merely here for backwards compatibility and SHOULD NOT be used for new projects
+	 * Instead use MenuBuilder(Component, int)
+	 * */
+	public MenuBuilder(String title, int rows) {
+		this(PlainTextComponentSerializer.plainText().deserialize(title), rows);
+	}
+
+	public MenuBuilder(Component titleComponent, InventoryType type){
 		Validate.isTrue(type.isCreatable(), "Invalid inventory type for menus: " + type);
-		this.title = title;
+		this.title = titleComponent;
 		this.type = type;
 		this.size = type.getDefaultSize();
-		
+
 		icons = Arrays.asList(new Icon[size]);
+	}
+
+	@Deprecated
+	/**
+	 * This constructor is merely here for backwards compatibility and SHOULD NOT be used for new projects
+	 * Instead use MenuBuilder(Component, InventoryType)
+	 * */
+	public MenuBuilder(String title, InventoryType type) {
+		this(PlainTextComponentSerializer.plainText().deserialize(title), type);
 	}
 	
 	public MenuBuilder icon(Icon icon) {

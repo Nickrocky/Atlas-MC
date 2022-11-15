@@ -2,6 +2,7 @@ package com.dndcraft.atlas.util;
 
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
+import net.bytebuddy.dynamic.scaffold.InstrumentedType;
 import net.kyori.adventure.text.Component;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
@@ -61,12 +62,12 @@ public class PlayerUtil implements Listener {
     }
 
     public static void freeze(Player player, int duration, String reason){
-        FrozenPlayer entry = new FrozenPlayer(player.getUniqueId(), false, duration, reason);
+        FrozenPlayer entry = new FrozenPlayer(player.getUniqueId(),  duration, reason);
         frozenPlayers.put(player.getUniqueId(), entry);
     }
 
     public static void freeze(Player player, boolean toggle, String reason){
-        FrozenPlayer entry = new FrozenPlayer(player.getUniqueId(), true, -1, reason);
+        FrozenPlayer entry = new FrozenPlayer(player.getUniqueId(), true,  reason);
         frozenPlayers.put(player.getUniqueId(), entry);
     }
 
@@ -85,12 +86,26 @@ public class PlayerUtil implements Listener {
     }
 }
 
-@RequiredArgsConstructor
 @Getter
 class FrozenPlayer{
     private final UUID player;
     private final boolean toggle;
-    private final int duration;
+    private int duration;
     private final String source;
     private final LocalDateTime unfrozen = LocalDateTime.now().plusSeconds(Math.max(0,duration)); //bc the duration is -1 if its a toggle
+
+    public FrozenPlayer(UUID player, boolean toggle, String source){
+        this.player = player;
+        this.toggle = toggle;
+        duration = -1;
+        this.source = source;
+    }
+
+    public FrozenPlayer(UUID player, int duration, String source){
+        this.player = player;
+        this.duration = duration;
+        this.source = source;
+        toggle = false;
+    }
+
 }
