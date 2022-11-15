@@ -17,7 +17,7 @@ public class BrigadierProvider {
 	 * This is used only for check what kind of NMS is
 	 * Starting 1.17.X or higher NMS layout was changed
 	 */
-	enum NMSType{Nms117,Nms1}
+	enum NMSType{Nms117, NmsNew}
 
 	private static final BrigadierProvider INSTANCE = new BrigadierProvider();
 	public static BrigadierProvider get() { return INSTANCE; }
@@ -35,7 +35,7 @@ public class BrigadierProvider {
 
 	/**
 	 * 1.18 getCommandDispatcher = aA
-	 * 1.19 getCommandDispatcher = kms
+	 * 1.19 getCommandDispatcher = aC
 	 * */
 
 	@SuppressWarnings("unchecked")
@@ -43,11 +43,12 @@ public class BrigadierProvider {
 		try {
 			var serverClass = MinecraftReflection.getMinecraftServerClass();
 			getServer = serverClass.getMethod("getServer");
-			getMCDispatcher = serverClass.getDeclaredMethod("aA");
+			getMCDispatcher = serverClass.getDeclaredMethod("aC");
+
 			getMCDispatcher.setAccessible(true);
 			getBrigadier = reflectBrigadierGetter();
 			getItemStack = reflectItemStackGetter();
-			if (getNMSType()==NMSType.Nms1) {
+			if (getNMSType()==NMSType.NmsNew) {
 				itemStackArgument = (Constructor<ArgumentType<Object>>) MinecraftReflection.getMinecraftClass("ArgumentItemStack").getConstructor();
 			} else {
 				Class<?> argItemS = null;
@@ -67,7 +68,7 @@ public class BrigadierProvider {
 	}
 
 	private Method reflectBrigadierGetter() throws Exception {
-		if (getNMSType()==NMSType.Nms1) {
+		if (getNMSType()==NMSType.NmsNew) {
 			var dispatcherClass = MinecraftReflection.getMinecraftClass("CommandDispatcher");
 			for(var xx : dispatcherClass.getDeclaredMethods()) {
 				if(xx.getParameterCount() == 0 && CommandDispatcher.class.isAssignableFrom(xx.getReturnType()))
@@ -85,7 +86,7 @@ public class BrigadierProvider {
 	}
 
 	private Method reflectItemStackGetter() throws Exception {
-		if (getNMSType()==NMSType.Nms1) {
+		if (getNMSType()==NMSType.NmsNew) {
 			var dispatcherClass = MinecraftReflection.getMinecraftClass("ArgumentPredicateItemStack");
 			var itemStackClass = MinecraftReflection.getItemStackClass();
 			for(var xx : dispatcherClass.getDeclaredMethods()) {
@@ -157,6 +158,6 @@ public class BrigadierProvider {
 			Class.forName("net.minecraft.commands.arguments.item.ArgumentPredicateItemStack");
 			Class.forName("net.minecraft.world.item.ItemStack");
 			return NMSType.Nms117;
-		} catch (ClassNotFoundException e1) {return NMSType.Nms1;}
+		} catch (ClassNotFoundException e1) {return NMSType.NmsNew;}
 	}
 }
